@@ -37,14 +37,14 @@ import android.content.Context
 
 class RWDC2018Application : Application() {
 
-    companion object {
-        private lateinit var instance: RWDC2018Application
+  companion object {
+    private lateinit var instance: RWDC2018Application
 
-        fun getAppContext(): Context = instance.applicationContext
-    }
+    fun getAppContext(): Context = instance.applicationContext
+  }
 
-    override fun onCreate() {
-        instance = this
-        super.onCreate()
-    }
+  override fun onCreate() {
+    instance = this
+    super.onCreate()
+  }
 }
