@@ -38,12 +38,12 @@ import com.raywenderlich.android.rwdc2018.repository.Repository
 
 class PhotosViewModel(private val repository: Repository) : ViewModel() {
 
-    fun getPhotos(): LiveData<List<String>> {
-        return repository.getPhotos()
-    }
+  fun getPhotos(): LiveData<List<String>> {
+    return repository.getPhotos()
+  }
 
-    fun getBanner(): LiveData<String> {
-        return repository.getBanner()
-    }
+  fun getBanner(): LiveData<String> {
+    return repository.getBanner()
+  }
 }
 

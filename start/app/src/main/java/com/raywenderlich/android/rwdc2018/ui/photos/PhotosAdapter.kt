@@ -42,22 +42,22 @@ import com.squareup.picasso.Picasso
 
 class PhotosAdapter(private val photos: List<String>) : RecyclerView.Adapter<PhotosAdapter.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(parent.inflate(R.layout.list_item_photo))
+  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    return ViewHolder(parent.inflate(R.layout.list_item_photo))
+  }
+
+  override fun getItemCount() = photos.size
+
+  override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    holder.bind(photos[position])
+  }
+
+  inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+    private val photoImageView: ImageView = itemView.findViewById(R.id.photo)
+
+    fun bind(photo: String) {
+      Picasso.get().load(photo).into(photoImageView)
     }
-
-    override fun getItemCount() = photos.size
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(photos[position])
-    }
-
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        private val photoImageView: ImageView = itemView.findViewById(R.id.photo)
-
-        fun bind(photo: String) {
-            Picasso.get().load(photo).into(photoImageView)
-        }
-    }
+  }
 }

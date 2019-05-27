@@ -37,44 +37,44 @@ import com.raywenderlich.android.rwdc2018.app.PhotosUtils
 
 
 class PhotosRepository : Repository {
-    private val photosLiveData = MutableLiveData<List<String>>()
-    private val bannerLiveData = MutableLiveData<String>()
+  private val photosLiveData = MutableLiveData<List<String>>()
+  private val bannerLiveData = MutableLiveData<String>()
 
-    override fun getPhotos(): LiveData<List<String>> {
-        fetchPhotos()
-        return photosLiveData
+  override fun getPhotos(): LiveData<List<String>> {
+    fetchPhotos()
+    return photosLiveData
+  }
+
+  override fun getBanner(): LiveData<String> {
+    fetchBanner()
+    return bannerLiveData
+  }
+
+  private fun fetchBanner() {
+    val runnable = Runnable {
+      val photosString = PhotosUtils.photoJsonString()
+      val banner = PhotosUtils.bannerFromJsonString(photosString ?: "")
+
+      if (banner != null) {
+        bannerLiveData.postValue(banner)
+      }
     }
 
-    override fun getBanner(): LiveData<String> {
-        fetchBanner()
-        return bannerLiveData
+    val thread = Thread(runnable)
+    thread.start()
+  }
+
+  private fun fetchPhotos() {
+    val runnable = Runnable {
+      val photosString = PhotosUtils.photoJsonString()
+      val photos = PhotosUtils.photoUrlsFromJsonString(photosString ?: "")
+
+      if (photos != null) {
+        photosLiveData.postValue(photos)
+      }
     }
 
-    private fun fetchBanner() {
-        val runnable = Runnable {
-            val photosString = PhotosUtils.photoJsonString()
-            val banner = PhotosUtils.bannerFromJsonString(photosString ?: "")
-
-            if (banner != null) {
-                bannerLiveData.postValue(banner)
-            }
-        }
-
-        val thread = Thread(runnable)
-        thread.start()
-    }
-
-    private fun fetchPhotos() {
-        val runnable = Runnable {
-            val photosString = PhotosUtils.photoJsonString()
-            val photos = PhotosUtils.photoUrlsFromJsonString(photosString ?: "")
-
-            if (photos != null) {
-                photosLiveData.postValue(photos)
-            }
-        }
-
-        val thread = Thread(runnable)
-        thread.start()
-    }
+    val thread = Thread(runnable)
+    thread.start()
+  }
 }

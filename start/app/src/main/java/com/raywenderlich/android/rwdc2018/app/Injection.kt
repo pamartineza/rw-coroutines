@@ -38,12 +38,12 @@ import com.raywenderlich.android.rwdc2018.ui.photos.PhotosViewModelFactory
 
 object Injection {
 
-    private fun provideRepository(): Repository {
-        return PhotosRepository()
-    }
+  private fun provideRepository(): Repository {
+    return PhotosRepository()
+  }
 
-    fun provideViewModelFactory(): PhotosViewModelFactory {
-        val repository = provideRepository()
-        return PhotosViewModelFactory(repository)
-    }
+  fun provideViewModelFactory(): PhotosViewModelFactory {
+    val repository = provideRepository()
+    return PhotosViewModelFactory(repository)
+  }
 }
