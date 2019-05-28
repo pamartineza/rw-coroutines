@@ -38,51 +38,52 @@ import android.arch.lifecycle.OnLifecycleEvent
 import android.util.Log
 import com.raywenderlich.android.rwdc2018.app.PhotosUtils
 import kotlinx.coroutines.*
+import kotlin.coroutines.CoroutineContext
 
 
-class PhotosRepository : Repository {
+class PhotosRepository : Repository, CoroutineScope {
+
   private val photosLiveData = MutableLiveData<List<String>>()
   private val bannerLiveData = MutableLiveData<String>()
   private val TAG = PhotosRepository::class.java.simpleName
   private val job: Job = Job()
-  private val coroutineScope = CoroutineScope(Dispatchers.IO + job)
+  override val coroutineContext: CoroutineContext
+    get() = Dispatchers.Main + job
 
 
   override fun getPhotos(): LiveData<List<String>> {
-    fetchPhotos()
+    launch {
+      fetchPhotos()
+    }
     return photosLiveData
   }
 
   override fun getBanner(): LiveData<String> {
-    fetchBanner()
+    launch {
+      fetchBanner()
+    }
     return bannerLiveData
   }
 
-  private fun fetchBanner() {
-    coroutineScope.launch {
+  private suspend fun fetchBanner() {
+    val banner = withContext(Dispatchers.IO) {
       val photosString = PhotosUtils.photoJsonString()
-      val banner = PhotosUtils.bannerFromJsonString(photosString ?: "")
+      PhotosUtils.bannerFromJsonString(photosString ?: "")
+    }
 
-      if (banner != null) {
-        withContext(Dispatchers.Main) {
-          // could use LiveData .postValue() to post a task on the main thread to set the value
-          bannerLiveData.value = banner
-        }
-      }
+    if (banner != null) {
+      bannerLiveData.value = banner
     }
   }
 
-  private fun fetchPhotos() {
-    coroutineScope.launch {
+  private suspend fun fetchPhotos() {
+    val photos = withContext(Dispatchers.IO) {
       val photosString = PhotosUtils.photoJsonString()
-      val photos = PhotosUtils.photoUrlsFromJsonString(photosString ?: "")
+      PhotosUtils.photoUrlsFromJsonString(photosString ?: "")
+    }
 
-      if (photos != null) {
-        withContext(Dispatchers.Main) {
-          // could use LiveData .postValue() to post a task on the main thread to set the value
-          photosLiveData.value = photos
-        }
-      }
+    if (photos != null) {
+      photosLiveData.value = photos
     }
   }
 
