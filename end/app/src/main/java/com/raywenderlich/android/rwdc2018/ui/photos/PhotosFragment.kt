@@ -47,37 +47,37 @@ import kotlinx.android.synthetic.main.fragment_photos.*
 
 class PhotosFragment : Fragment() {
 
-    private lateinit var viewModel: PhotosViewModel
+  private lateinit var viewModel: PhotosViewModel
 
-    companion object {
-        fun newInstance(): PhotosFragment {
-            return PhotosFragment()
-        }
+  companion object {
+    fun newInstance(): PhotosFragment {
+      return PhotosFragment()
     }
+  }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
 
-        return inflater.inflate(R.layout.fragment_photos, container, false)
-    }
+    return inflater.inflate(R.layout.fragment_photos, container, false)
+  }
 
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
+  override fun onAttach(context: Context?) {
+    super.onAttach(context)
 
-        val viewModelFactory = Injection.provideViewModelFactory(lifecycle)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(PhotosViewModel::class.java)
-    }
+    val viewModelFactory = Injection.provideViewModelFactory(lifecycle)
+    viewModel = ViewModelProviders.of(this, viewModelFactory).get(PhotosViewModel::class.java)
+  }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getBanner().observe(this, Observer { banner ->
-            Picasso.get().load(banner).fit().into(bannerImageView)
-        })
+    viewModel.getBanner().observe(this, Observer { banner ->
+      Picasso.get().load(banner).fit().into(bannerImageView)
+    })
 
-        viewModel.getPhotos().observe(this, Observer { photos ->
-            val adapter = PhotosAdapter(photos ?: emptyList())
-            photosRecyclerView.layoutManager = GridLayoutManager(context, 2)
-            photosRecyclerView.adapter = adapter
-        })
-    }
+    viewModel.getPhotos().observe(this, Observer { photos ->
+      val adapter = PhotosAdapter(photos ?: emptyList())
+      photosRecyclerView.layoutManager = GridLayoutManager(context, 2)
+      photosRecyclerView.adapter = adapter
+    })
+  }
 }

@@ -38,11 +38,11 @@ import com.raywenderlich.android.rwdc2018.repository.Repository
 
 class PhotosViewModelFactory(private val repository: Repository) : ViewModelProvider.Factory {
 
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(PhotosViewModel::class.java)) {
-            return PhotosViewModel(repository) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
+  @Suppress("UNCHECKED_CAST")
+  override fun <T : ViewModel> create(modelClass: Class<T>): T {
+    if (modelClass.isAssignableFrom(PhotosViewModel::class.java)) {
+      return PhotosViewModel(repository) as T
     }
+    throw IllegalArgumentException("Unknown ViewModel class")
+  }
 }

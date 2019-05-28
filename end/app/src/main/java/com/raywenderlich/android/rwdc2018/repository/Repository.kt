@@ -36,7 +36,7 @@ import android.arch.lifecycle.LifecycleObserver
 import android.arch.lifecycle.LiveData
 
 interface Repository : LifecycleObserver {
-    fun getPhotos(): LiveData<List<String>>
-    fun getBanner(): LiveData<String>
-    fun registerLifecycle(lifecycle: Lifecycle)
+  fun getPhotos(): LiveData<List<String>>
+  fun getBanner(): LiveData<String>
+  fun registerLifecycle(lifecycle: Lifecycle)
 }

@@ -33,5 +33,5 @@ package com.raywenderlich.android.rwdc2018.app
 
 
 object Constants {
-    const val PHOTOS_URL = "https://api.myjson.com/bins/seroe"
+  const val PHOTOS_URL = "https://api.myjson.com/bins/seroe"
 }

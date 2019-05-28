@@ -31,68 +31,71 @@
 
 package com.raywenderlich.android.rwdc2018.repository
 
-import android.arch.lifecycle.*
+import android.arch.lifecycle.Lifecycle
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
+import android.arch.lifecycle.OnLifecycleEvent
 import android.util.Log
 import com.raywenderlich.android.rwdc2018.app.PhotosUtils
 import kotlinx.coroutines.*
 
 
 class PhotosRepository : Repository {
-    private val photosLiveData = MutableLiveData<List<String>>()
-    private val bannerLiveData = MutableLiveData<String>()
-    private val TAG = PhotosRepository::class.java.simpleName
-    private val job: Job = Job()
-    private val coroutineScope = CoroutineScope(Dispatchers.IO + job)
+  private val photosLiveData = MutableLiveData<List<String>>()
+  private val bannerLiveData = MutableLiveData<String>()
+  private val TAG = PhotosRepository::class.java.simpleName
+  private val job: Job = Job()
+  private val coroutineScope = CoroutineScope(Dispatchers.IO + job)
 
 
-    override fun getPhotos(): LiveData<List<String>> {
-        fetchPhotos()
-        return photosLiveData
-    }
+  override fun getPhotos(): LiveData<List<String>> {
+    fetchPhotos()
+    return photosLiveData
+  }
 
-    override fun getBanner(): LiveData<String> {
-        fetchBanner()
-        return bannerLiveData
-    }
+  override fun getBanner(): LiveData<String> {
+    fetchBanner()
+    return bannerLiveData
+  }
 
-    private fun fetchBanner() {
-        coroutineScope.launch {
-            val photosString = PhotosUtils.photoJsonString()
-            val banner = PhotosUtils.bannerFromJsonString(photosString ?: "")
+  private fun fetchBanner() {
+    coroutineScope.launch {
+      val photosString = PhotosUtils.photoJsonString()
+      val banner = PhotosUtils.bannerFromJsonString(photosString ?: "")
 
-            if (banner != null) {
-                withContext(Dispatchers.Main) {
-                    // could use LiveData .postValue() to post a task on the main thread to set the value
-                    bannerLiveData.value = banner
-                }
-            }
+      if (banner != null) {
+        withContext(Dispatchers.Main) {
+          // could use LiveData .postValue() to post a task on the main thread to set the value
+          bannerLiveData.value = banner
         }
+      }
     }
+  }
 
-    private fun fetchPhotos() {
-        coroutineScope.launch {
-            val photosString = PhotosUtils.photoJsonString()
-            val photos = PhotosUtils.photoUrlsFromJsonString(photosString ?: "")
+  private fun fetchPhotos() {
+    coroutineScope.launch {
+      val photosString = PhotosUtils.photoJsonString()
+      val photos = PhotosUtils.photoUrlsFromJsonString(photosString ?: "")
 
-            if (photos != null) {
-                withContext(Dispatchers.Main) {
-                    // could use LiveData .postValue() to post a task on the main thread to set the value
-                    photosLiveData.value = photos
-                }
-            }
+      if (photos != null) {
+        withContext(Dispatchers.Main) {
+          // could use LiveData .postValue() to post a task on the main thread to set the value
+          photosLiveData.value = photos
         }
+      }
     }
+  }
 
-    override fun registerLifecycle(lifecycle: Lifecycle) {
-        lifecycle.addObserver(this)
-    }
+  override fun registerLifecycle(lifecycle: Lifecycle) {
+    lifecycle.addObserver(this)
+  }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-    private fun cancelJob() {
-        Log.d(TAG, "cancelJob()")
-        if (job.isActive) {
-            Log.d(TAG, "Job active, canceling")
-            job.cancel()
-        }
+  @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+  private fun cancelJob() {
+    Log.d(TAG, "cancelJob()")
+    if (job.isActive) {
+      Log.d(TAG, "Job active, canceling")
+      job.cancel()
     }
+  }
 }
